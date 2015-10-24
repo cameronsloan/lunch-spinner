@@ -45,7 +45,8 @@
             time: 7000, // Number: total time of spin animation
             loops: 6, // Number: times it will spin during the animation
             endNumbers: [], // *ADDED* Array: list an array matching the number of slots. Pass empty array for random results.
-			endNumFunc: $.noop
+			endNumFuncFav: $.noop,
+			endNumFuncYelp: $.noop
         };
 
         // --------------------------------------------------------------------- //
@@ -110,10 +111,19 @@
         };
 
         base.bindEvents = function () {
-            $(base.options.spinner).bind(base.options.spinEvent, function (event) {
-                if($.isFunction(base.options.endNumFunc)){
-					base.options.endNumbers = base.options.endNumFunc();
-					console.log(base.options.endNumbers);
+            $("#playFancy").bind(base.options.spinEvent, function (event) {
+                if($.isFunction(base.options.endNumFuncFav)){
+					base.options.endNumbers = base.options.endNumFuncFav();
+				}
+				
+				if (!base.isSpinning) {
+                    base.playSlots();
+                }
+            });
+            
+            $("#playSuprise").bind(base.options.spinEvent, function (event) {
+                if($.isFunction(base.options.endNumFuncYelp)){
+					base.options.endNumbers = base.options.endNumFuncYelp();
 				}
 				
 				if (!base.isSpinning) {

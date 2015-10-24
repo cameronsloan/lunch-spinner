@@ -48,12 +48,13 @@
 	    return $data;
 	}
 	
-	function search($term, $location) {
+	function search($term, $location, $sort, $limit) {
 	    $url_params = array();
 	    
 	    $url_params['term'] = $term ?: $GLOBALS['DEFAULT_TERM'];
-	    $url_params['location'] = $location?: $GLOBALS['DEFAULT_LOCATION'];
-	    $url_params['limit'] = $GLOBALS['SEARCH_LIMIT'];
+	    $url_params['location'] = $location ?: $GLOBALS['DEFAULT_LOCATION'];
+	    $url_params['sort'] = $sort ?: "";
+	    $url_params['limit'] = $limit ?: $GLOBALS['SEARCH_LIMIT'];
 	    $search_path = $GLOBALS['SEARCH_PATH'] . "?" . http_build_query($url_params);
 	    
 	    return request($GLOBALS['API_HOST'], $search_path);
