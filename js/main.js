@@ -13,7 +13,7 @@
 		if(typeof(snapshot.val() === 'object')){
 			for(var k in snapshot.val()[userRef]) {
 				lunchOptions.push(snapshot.val()[userRef][k].name.toUpperCase());
-				$('#favTable > tbody:last-child').append('<tr><td>'+snapshot.val()[userRef][k].name+'<span class="glyphicon glyphicon-remove deleteFav" id="'+k+'" onClick="deleteFavorite(this.id)" style="float: right; color: red;"></span></td></tr>');
+				$('#favTable > tbody:last-child').append('<tr><td>'+snapshot.val()[userRef][k].name+'<td><input type="checkbox" class="notToday"/></td><td id="'+k+'" class="glyphicon glyphicon-remove deleteFav" style="color: red;" onClick="deleteFavorite(this.id)"></td></tr>');
 			}
 		}
 	}, function (errorObject) {
@@ -59,12 +59,31 @@
 	// Spin from user's favorites
 	$('.fancy .slot').jSlots({
 		number : 32,
+		onStart : function() {
+			//document.getElementById('#pullArm').play();	
+		},
 		easing : 'easeOutSine',
 		time : 6000,
 		loops : 5,
  		endNumbers: [],
 		endNumFuncFav: function() {					
-			var lunchString = lunchOptions[Math.floor(Math.random()*lunchOptions.length)];
+			var notToday = [];
+			$('#favTBody > tr').each(function(){
+				if($(this).eq(0).find(':checkbox').is(':checked')) {
+					notToday.push( $(this).find("td").eq(0).text().toUpperCase() );
+				}
+			});
+			console.log(notToday);
+			
+			useableLunchOptions = [];
+			jQuery.each(lunchOptions, function(index, value){
+				if($.inArray(value, notToday) == -1) {
+					useableLunchOptions.push(value);
+				}	
+			});
+			console.log(useableLunchOptions);
+			
+			var lunchString = useableLunchOptions[Math.floor(Math.random()*useableLunchOptions.length)];
 			//console.log(lunchString);
 			var winner = [];
 			var padding = Math.ceil((32 - lunchString.length) / 2);

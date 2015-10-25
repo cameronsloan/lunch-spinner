@@ -81,6 +81,11 @@
 		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     </head
     <body>
+		<!--<audio controls id="pullArm" style="display: none;">-->
+		<!--	<source src="horse.ogg" type="audio/ogg">-->
+		<!--	<source src="horse.mp3" type="audio/mpeg">-->
+		<!--</audio>-->
+    
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -135,7 +140,7 @@
 						<li><span>&amp;</span></li>
 					</ul>
 				</div>
-				<div style="margin: 20px auto; width: 400px;">
+				<div style="margin: 40px auto; width: 400px;">
 					<input type="button" class="btn btn-primary btn-lg btn-block" id="playFancy" value="Spin My Favorites">
 				</div>
 			</div>
@@ -154,6 +159,8 @@
 					<thead>
 						<tr>
 							<th>Configured Favorites</th>
+							<th>Not Today</th>
+							<th></th>
 						</tr>
 					</thead>
 				</table>
@@ -215,7 +222,7 @@
 							<th style="white-space: nowrap;">Restaurant Name</th>
 							<th>Rating</th>
 							<th>Address</th>
-							<th style="text-align: right;">Dist.</th>
+							<?=(isset($b->distance)) ? '<th style="text-align: right;">Dist.</th>' : ''?>
 						</tr>
 					</thead>
 				</table>
@@ -229,7 +236,7 @@
 										<td><?=$b->name?></a></td>
 										<td><img src="<?=$b->rating_img_url_small?>"/></td>
 										<td><?=$b->location->address[0]?></td>
-										<td style="text-align: center;"><?=isset($b->distance) ? round(($b->distance * 0.000621371), 2)." miles" : "?"?></td>
+										<?=(isset($b->distance)) ? '<td style="text-align: center;">'.round(($b->distance * 0.000621371), 2).' mi</td>' : ''?>
 									</tr>
 								<?php } 
 								} else { ?>

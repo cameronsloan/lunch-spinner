@@ -42,7 +42,7 @@
             onEnd: $.noop, // Function: run on spin end. It is passed (finalNumbers:Array). finalNumbers gives the index of the li each slot stopped on in order.
             onWin: $.noop, // Function: run on winning number. It is passed (winCount:Number, winners:Array)
             easing: 'swing', // String: easing type for final spin
-            time: 7000, // Number: total time of spin animation
+            time: 6000, // Number: total time of spin animation
             loops: 6, // Number: times it will spin during the animation
             endNumbers: [], // *ADDED* Array: list an array matching the number of slots. Pass empty array for random results.
 			endNumFuncFav: $.noop,
