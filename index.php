@@ -46,8 +46,8 @@
     }
     
     if(isset($location)) {
-        $response = json_decode(search($term, implode(", ", $location), $sort = 1, $limit = 10));
-        
+        $response = json_decode(search($term, implode(", ", $location), $sort = 1, $limit = 20));
+        //print_r($response); die();
         // Process Yelp response for spinner
         $yelpArr = array();
         foreach($response->businesses as $r) {
@@ -73,12 +73,15 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="js/vendor/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+        
 
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 		<script src="js/vendor/jquery.easing.1.3.js"></script>
 		<script src="js/vendor/jquery.jSlots.js"></script>
 		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script type="text/javascript" src="js/vendor/fancybox/jquery.fancybox.pack.js"></script>
     </head
     <body>
 		<!--<audio controls id="pullArm" style="display: none;">-->
@@ -233,7 +236,7 @@
 								foreach($response->businesses as $b) { ?>
 									<tr>
 										<td class="addNewFavYelp"><span class="glyphicon glyphicon-plus" style="color: green;"></span></td>
-										<td><?=$b->name?></a></td>
+										<td><?(isset($b->img_url)) ? '<a class="fancybox" rel="gallery" href="<?=$b->img_url?>"><span class="glyphicon glyphicon-picture"></span></a>&nbsp;' : "" ?><a href="<?=$b->url?>"><?=$b->name?></a></td>
 										<td><img src="<?=$b->rating_img_url_small?>"/></td>
 										<td><?=$b->location->address[0]?></td>
 										<?=(isset($b->distance)) ? '<td style="text-align: center;">'.round(($b->distance * 0.000621371), 2).' mi</td>' : ''?>
