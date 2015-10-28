@@ -92,8 +92,13 @@ input[type="button"] {
     margin-bottom: 0;
 }
 
-.favBody {
+.fav-body {
     height: 300px;
+    overflow: auto;
+}
+
+.fav-body-yelp {
+    height: 400px;
     overflow: auto;
 }
 

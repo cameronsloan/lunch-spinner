@@ -45,8 +45,25 @@
         $location['state'] = $details->region;
     }
     
+    function getCoordinates($address){
+	    $address = urlencode($address);
+	    $url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=" . $address;
+	    $response = file_get_contents($url);
+	    $json = json_decode($response,true);
+	 
+	    $lat = $json['results'][0]['geometry']['location']['lat'];
+	    $lng = $json['results'][0]['geometry']['location']['lng'];
+	 
+	    return array($lat, $lng);
+	}
+    
     if(isset($location)) {
-        $response = json_decode(search($term, implode(", ", $location), $sort = 1, $limit = 20));
+    	if(isset($location['address'])) {
+    		$coords = getCoordinates(implode(", " , $location));
+    	}
+       	
+       	$response = json_decode(search($term, implode(", ", $location), $coords, $sort = 1, $limit = 20));
+ 
         //print_r($response); die();
         // Process Yelp response for spinner
         $yelpArr = array();
@@ -89,22 +106,22 @@
 		<!--	<source src="horse.mp3" type="audio/mpeg">-->
 		<!--</audio>-->
     
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Lunch Picker</a>
-        </div>
-        <div class="navbar-collapse collapse">
-
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Lunch Picker</a>
+			</div>
+			<div class="navbar-collapse collapse">
+			
+			</div><!--/.navbar-collapse -->
+		</div>
+	</div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
@@ -158,21 +175,26 @@
 		<!-- Example row of columns -->
 		<div class="row">
 			<div class="col-md-4">
-				<table class="table favHeader">
-					<thead>
-						<tr>
-							<th>Configured Favorites</th>
-							<th>Not Today</th>
-							<th></th>
-						</tr>
-					</thead>
-				</table>
-				<div class="favBody">
-					<table class="table table-striped" id="favTable">
-						<tbody id="favTBody">
-	
-						</tbody>
+				<div id="favList">
+					<table class="table favHeader">
+						<thead>
+							<tr>
+								<th>Configured Favorites</th>
+								<th>Not Today</th>
+							</tr>
+						</thead>
 					</table>
+					<div class="fav-body">
+						<table class="table table-striped" id="favTable">
+							<tbody id="favTBody">
+		
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div id="noFavList" style="display: none; text-align: center; padding-bottom: 50px;">
+					<h4>No Saved Favorites</h4>
+					<p>Your favoritie restaurants will be shown here once they are set up. Get started by entering your favorite restaurants using the form below, or you can select from the Yelp lings to the right. Clicking the green plus sign will add them directly to your saved favorits.</p>
 				</div>
 				<div style="width: 70%; margin: 20px auto;">
 					<label for="exampleInputEmail1">New Favorite Restaurant</label>
@@ -182,18 +204,23 @@
 				</div>
 
 			</div>
+			
 			<div class="col-md-1">
-				
+				<!--THIS IS A SPACER BETWEEN THE TO TABLES	-->
 			</div>
 			
 			<div class="col-md-7">
-				<div style="padding-top: 8px">
-					<span style="font-size: 14px; font-weight: bold;" title="Search Yelp listings to find new favorites. Click the green + to add them to your favorite list. After your search, Click the 'Find Me Something New' button above to let Lunch Spinner choose for you!">Find New Favorites:</span>
-				</div>
 				<table class="table favHeader">
 					<thead>
 						<tr>
-							<th colspan="6">
+							<th>
+								<div style="float: left;" title="Search Yelp listings to find new favorites. Click the green + to add them to your favorite list. After your search, Click the 'Find Me Something New' button above to let Lunch Spinner choose for you!">Find New Favorites</div>
+
+								<div id="yelpAddressBtn" style="float: right;"><a href="#">Enter Address <span class="glyphicon glyphicon-chevron-down"></a></span></div>
+							</th>
+						</tr>
+						<tr>
+							<th id="yelpAddress" style="display: none;">
 								<form action="index.php" method="post">
 								    <div class="suprise">
 								        <div class="col-md-3 less-padding">
@@ -220,16 +247,9 @@
 								</form>
 							</th>
 						</tr>
-						<tr>
-							<th style="font-size: 10px; text-align: left;">Save</th>
-							<th style="white-space: nowrap;">Restaurant Name</th>
-							<th>Rating</th>
-							<th>Address</th>
-							<?=(isset($b->distance)) ? '<th style="text-align: right;">Dist.</th>' : ''?>
-						</tr>
 					</thead>
 				</table>
-				<div class="favBody">
+				<div class="fav-body-yelp">
 					<table class="table table-striped">
 						<tbody id="favTBody">
 							<?php if(isset($response)) { 
@@ -239,7 +259,7 @@
 										<td><?(isset($b->img_url)) ? '<a class="fancybox" rel="gallery" href="<?=$b->img_url?>"><span class="glyphicon glyphicon-picture"></span></a>&nbsp;' : "" ?><a href="<?=$b->url?>"><?=$b->name?></a></td>
 										<td><img src="<?=$b->rating_img_url_small?>"/></td>
 										<td><?=$b->location->address[0]?></td>
-										<?=(isset($b->distance)) ? '<td style="text-align: center;">'.round(($b->distance * 0.000621371), 2).' mi</td>' : ''?>
+										<?=(isset($b->distance)) ? '<td style="text-align: center;">'.round(($b->distance * 0.000621371), 2).' mi</td>' : '<td></td>'?>
 									</tr>
 								<?php } 
 								} else { ?>
@@ -258,13 +278,15 @@
 		
 		<hr>
 
-      <footer>
-        <p>&copy; GiantDude Software 2015</p>
-		<script type="text/javascript">
-			var lunchOptionsYelp = <?=$lunchOptionsYelp?>;
-		</script>
-		<script src="js/main.js"></script>
-      </footer>
-    </div>
-    </body>
+		<footer>
+			<p>&copy; GiantDude Software 2015</p>
+			
+			<script type="text/javascript">
+				var lunchOptionsYelp = <?=$lunchOptionsYelp?>;
+			</script>
+			<script src="js/id_gen.js"></script>
+			<script src="js/cookies.js"></script>
+			<script src="js/main.js"></script>
+		</footer>
+	</body>
 </html>

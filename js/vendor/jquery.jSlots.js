@@ -1,4 +1,3 @@
-
 /*
  * jQuery jSlots Plugin
  * http://matthewlein.com/jslot/
@@ -8,9 +7,9 @@
  * Requires: jQuery v1.4.1 or later
  */
 
-(function ($) {
-	
-	$.jSlots = function (el, options) {
+(function($){
+
+    $.jSlots = function(el, options){
 
         var base = this;
 
@@ -19,9 +18,9 @@
 
         base.$el.data("jSlots", base);
 
-        base.init = function () {
+        base.init = function() {
 
-            base.options = $.extend({}, $.jSlots.defaultOptions, options);
+            base.options = $.extend({},$.jSlots.defaultOptions, options);
 
             base.setup();
             base.bindEvents();
@@ -34,18 +33,18 @@
         // --------------------------------------------------------------------- //
 
         $.jSlots.defaultOptions = {
-            number: 3, // Number: number of slots
-            winnerNumber: 1, // Number or Array: list item number(s) upon which to trigger a win, 1-based index, NOT ZERO-BASED
-            spinner: '', // CSS Selector: element to bind the start event to
-            spinEvent: 'click', // String: event to start slots on this event
-            onStart: $.noop, // Function: runs on spin start,
-            onEnd: $.noop, // Function: run on spin end. It is passed (finalNumbers:Array). finalNumbers gives the index of the li each slot stopped on in order.
-            onWin: $.noop, // Function: run on winning number. It is passed (winCount:Number, winners:Array)
-            easing: 'swing', // String: easing type for final spin
-            time: 6000, // Number: total time of spin animation
-            loops: 6, // Number: times it will spin during the animation
+            number : 3,          // Number: number of slots
+            winnerNumber : 1,    // Number or Array: list item number(s) upon which to trigger a win, 1-based index, NOT ZERO-BASED
+            spinner : '',        // CSS Selector: element to bind the start event to
+            spinEvent : 'click', // String: event to start slots on this event
+            onStart : $.noop,    // Function: runs on spin start,
+            onEnd : $.noop,      // Function: run on spin end. It is passed (finalNumbers:Array). finalNumbers gives the index of the li each slot stopped on in order.
+            onWin : $.noop,      // Function: run on winning number. It is passed (winCount:Number, winners:Array)
+            easing : 'swing',    // String: easing type for final spin
+            time : 7000,         // Number: total time of spin animation
+            loops : 6,           // Number: times it will spin during the animation
             endNumbers: [], // *ADDED* Array: list an array matching the number of slots. Pass empty array for random results.
-			endNumFuncFav: $.noop,
+            endNumFuncFav: $.noop,
 			endNumFuncYelp: $.noop
         };
 
@@ -53,8 +52,8 @@
         // HELPERS
         // --------------------------------------------------------------------- //
 
-        base.randomRange = function (low, high) {
-            return Math.floor(Math.random() * (1 + high - low)) + low;
+        base.randomRange = function(low, high) {
+            return Math.floor( Math.random() * (1 + high - low) ) + low;
         };
 
         // --------------------------------------------------------------------- //
@@ -65,7 +64,7 @@
         base.spinSpeed = 0;
         base.winCount = 0;
         base.doneCount = 0;
-		base.endNum = 0;
+        base.endNum = 0;
 
         base.$liHeight = 0;
         base.$liWidth = 0;
@@ -78,7 +77,7 @@
         // --------------------------------------------------------------------- //
 
 
-        base.setup = function () {
+        base.setup = function() {
 
             // set sizes
 
@@ -104,13 +103,13 @@
             base.$el.remove();
 
             // clone lists
-            for (var i = base.options.number - 1; i >= 0; i--) {
-                base.allSlots.push(new base.Slot());
+            for (var i = base.options.number - 1; i >= 0; i--){
+                base.allSlots.push( new base.Slot() );
             }
 
         };
 
-        base.bindEvents = function () {
+        base.bindEvents = function() {
             $("#playFancy").bind(base.options.spinEvent, function (event) {
                 if($.isFunction(base.options.endNumFuncFav)){
 					base.options.endNumbers = base.options.endNumFuncFav();
@@ -133,7 +132,7 @@
         };
 
         // Slot contstructor
-        base.Slot = function () {
+        base.Slot = function() {
 
             this.spinSpeed = 0;
             this.el = base.$el.clone().appendTo(base.$wrapper)[0];
@@ -147,25 +146,24 @@
         base.Slot.prototype = {
 
             // do one rotation
-            spinEm: function () {
+            spinEm : function() {
 
                 var that = this;
 
-                that.$el.css('top', -base.listHeight)
-                    .animate({
-                    'top': '0px'
-                }, that.spinSpeed, 'linear', function () {
-                    that.lowerSpeed();
-                });
+                that.$el
+                    .css( 'top', -base.listHeight )
+                    .animate( { 'top' : '0px' }, that.spinSpeed, 'linear', function() {
+                        that.lowerSpeed();
+                    });
 
             },
 
-            lowerSpeed: function () {
+            lowerSpeed : function() {
 
                 this.spinSpeed += base.increment;
                 this.loopCount++;
 
-                if (this.loopCount < base.options.loops) {
+                if ( this.loopCount < base.options.loops ) {
 
                     this.spinEm();
 
@@ -176,12 +174,12 @@
                 }
             },
 
-            // final rotation <--- Key
-            finish: function () {
+            // final rotation
+            finish : function() {
 
                 var that = this;
 
-                   // Checks if endNumbers array length is greater than 0. If not selects a random number.
+                // Checks if endNumbers array length is greater than 0. If not selects a random number.
                 var endNum;
 				if (base.options.endNumbers.length > 0) {
                     endNum = base.options.endNumbers[base.allSlots.indexOf(this)];
@@ -189,24 +187,20 @@
                     endNum = base.randomRange(1, base.liCount);
                 }
 
+                var finalPos = - ( (base.$liHeight * endNum) - base.$liHeight );
+                var finalSpeed = ( (this.spinSpeed * 0.1) * (base.liCount) ) / endNum;
 
-
-
-                var finalPos = -((base.$liHeight * endNum) - base.$liHeight);
-                var finalSpeed = ((this.spinSpeed * 0.1) * (base.liCount)) / endNum;
-
-                that.$el.css('top', -base.listHeight)
-                    .animate({
-                    'top': finalPos
-                }, finalSpeed, base.options.easing, function () {
-                    base.checkWinner(endNum, that);
-                });
+                that.$el
+                    .css( 'top', -base.listHeight )
+                    .animate( {'top': finalPos}, finalSpeed, base.options.easing, function() {
+                        base.checkWinner(endNum, that);
+                    });
 
             }
 
         };
 
-        base.checkWinner = function (endNum, slot) {
+        base.checkWinner = function(endNum, slot) {
 
             base.doneCount++;
             // set the slot number to whatever it ended on
@@ -214,7 +208,9 @@
 
             // if its in the winners array
             if (
-            ($.isArray(base.options.winnerNumber) && base.options.winnerNumber.indexOf(endNum) > -1) || endNum === base.options.winnerNumber) {
+                ( $.isArray( base.options.winnerNumber ) && base.options.winnerNumber.indexOf(endNum) > -1 ) ||
+                endNum === base.options.winnerNumber
+                ) {
 
                 // its a winner!
                 base.winCount++;
@@ -226,15 +222,15 @@
 
                 var finalNumbers = [];
 
-                $.each(base.allSlots, function (index, val) {
+                $.each(base.allSlots, function(index, val) {
                     finalNumbers[index] = val.number;
                 });
 
-                if ($.isFunction(base.options.onEnd)) {
+                if ( $.isFunction( base.options.onEnd ) ) {
                     base.options.onEnd(finalNumbers);
                 }
 
-                if (base.winCount && $.isFunction(base.options.onWin)) {
+                if ( base.winCount && $.isFunction(base.options.onWin) ) {
                     base.options.onWin(base.winCount, base.winners, finalNumbers);
                 }
                 base.isSpinning = false;
@@ -242,18 +238,18 @@
         };
 
 
-        base.playSlots = function () {
+        base.playSlots = function() {
 
             base.isSpinning = true;
             base.winCount = 0;
             base.doneCount = 0;
             base.winners = [];
 
-            if ($.isFunction(base.options.onStart)) {
+            if ( $.isFunction(base.options.onStart) ) {
                 base.options.onStart();
             }
 
-            $.each(base.allSlots, function (index, val) {
+            $.each(base.allSlots, function(index, val) {
                 this.spinSpeed = 0;
                 this.loopCount = 0;
                 this.spinEm();
@@ -262,8 +258,8 @@
         };
 
 
-        base.onWin = function () {
-            if ($.isFunction(base.options.onWin)) {
+        base.onWin = function() {
+            if ( $.isFunction(base.options.onWin) ) {
                 base.options.onWin();
             }
         };
@@ -278,12 +274,12 @@
     // JQUERY FN
     // --------------------------------------------------------------------- //
 
-    $.fn.jSlots = function (options) {
+    $.fn.jSlots = function(options){
         if (this.length) {
-            return this.each(function () {
+            return this.each(function(){
                 (new $.jSlots(this, options));
             });
         }
     };
 
-})(window.jQuery);
+})(jQuery);
