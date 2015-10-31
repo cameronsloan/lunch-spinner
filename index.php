@@ -7,6 +7,8 @@
     
     if(isset($_GET['user-key'])) {
     	$userKey = "'".$_GET['user-key']."'";
+    } else {
+    	$userKey = 'false';
     }
 
     if(!empty($_POST)) {
@@ -105,10 +107,10 @@
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 		<script src="js/vendor/angular.min.js"></script>
+		<script src="js/vendor/angular-cookies.js"></script>
 		<script src="js/vendor/jquery.easing.1.3.js"></script>
 		<script src="js/vendor/jquery.jSlots.js"></script>
 		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-		<script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
 		<script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
 		<script type="text/javascript" src="js/vendor/fancybox/jquery.fancybox.pack.js"></script>
     </head>
@@ -186,7 +188,7 @@
 	    <div class="container">
 			<!-- Example row of columns -->
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-4" ng-controller="favctrl">
 					<div id="favList">
 						<table class="table favHeader">
 							<thead>
@@ -196,15 +198,19 @@
 								</tr>
 							</thead>
 						</table>
-						<div class="fav-body" ng-controller="favctrl">
+						<div class="fav-body" ng-if="datasvc.favList">
 							<table class="table table-striped" id="favTable">
 								<tbody id="favTBody">
-									<tr ng-repeat="f in "
+									<tr ng-repeat="f in datasvc.favList">
+										<td style="width: 300px;">{{ f.name }}</td>
+										<td><input type="checkbox" class="notToday"/></td>
+										<td ng-click="deleteFavorite( f )" class="glyphicon glyphicon-remove deleteFav" style="top: 0px !important; color: red"></td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
 					</div>
-					<div id="noFavList" style="display: none; text-align: center; padding-bottom: 50px;">
+					<div id="noFavList" style="display: none; text-align: center; padding-bottom: 50px;" ng-if="!datasvc.favList">
 						<h4>No Saved Favorites</h4>
 						<p>Your favoritie restaurants will be shown here once they are set up. Get started by entering your favorite restaurants using the form below, or you can select from the Yelp lings to the right. Clicking the green plus sign will add them directly to your saved favorits.</p>
 					</div>
@@ -212,13 +218,13 @@
 						<label for="exampleInputEmail1">New Favorite Restaurant</label>
 						<input ng-model="favInput" class="form-control" id="newFav" />
 						<br />
-						<input type="button" class="btn btn-primary btn-lg btn-block" id="addNewFav" value="Add To Database">
+						<input type="button" class="btn btn-primary btn-lg btn-block" ng-click="addFavManual()" value="Add To Database">
 					</div>
 	
 				</div>
 				
 				<div class="col-md-1">
-					<!--THIS IS A SPACER BETWEEN THE TO TABLES	-->
+					<!--THIS IS A SPACER BETWEEN THE TO TABLES-->
 				</div>
 				
 				<div class="col-md-7">
@@ -265,7 +271,7 @@
 						<table class="table table-striped">
 							<tbody id="favTBody">
 								<tr ng-if="yelpResponse" ng-repeat="b in yelpResponse.businesses">
-									<td ng-click="addYelpFav()">
+									<td ng-click="addYelpFav(b.name)">
 										<span class="glyphicon glyphicon-plus" style="color: green;"></span>
 									</td>
 									<td ng-if="b.img_url">
@@ -302,14 +308,16 @@
 			<footer>
 				<p>&copy; GiantDude Software 2015</p>
 				<script type="text/javascript">
-					<?php (isset($userKey)) ? "var userKey = $userKey;" : "''"?>
+					var userKey = <?=$userKey?>;
 					var lunchOptionsYelp = <?=$lunchOptionsYelp?>;
 					var yelpResponse = <?=$yelpSearchJson?>;
 				</script>
-				<script src="js/cookies.js"></script>
-				<script src="js/main.js"></script>
+				<script src="js/globalapp.js"></script>
+				<script src="js/controllers/favorites.controller.js"></script>
 				<script src="js/controllers/yelp.controller.js"></script>
-				<script src="js/services/firebase.service.js"></script>
+				<script src="js/services/cookie.service.js"></script>
+				<script src="js/services/data.service.js"></script>
+				<script src="js/main.js"></script>
 			</footer>
 		</div>
 	</body>

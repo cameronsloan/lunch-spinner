@@ -1,1 +1,1 @@
-var globalapp = angular.module('globalapp', ["firebase"]);
+var globalapp = angular.module('globalapp', ["ngCookies", "firebase"])

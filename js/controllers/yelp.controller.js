@@ -1,17 +1,34 @@
-globalapp.controller('yelpctrl', ["$scopt", "$firebaseArray",
-function($scope, $firebaseArray) {
+globalapp.controller('yelpctrl', ["$scope", 'dataservice', 'cookieservice',
+function($scope, dataservice, cookieservice) {
     $scope.lunchOptionsYelp = lunchOptionsYelp;
     $scope.yelpResponse = yelpResponse;
+    $scope.datasvc = dataservice;
     
-    $scope.addNewYelpFav = function(){
-		var newFavString = $("#newFav").val();
+    // Take in userKey from php file as cookieVal
+	var cookieVal = (userKey) ? userKey : false;
+	
+	if(!cookieVal) {
+    	if(cookieservice.areCookiesEnabled()) {
+            cookieVal = cookieservice.getCookie('lunch-spinner');
+        } else {
+            cookieVal = false;
+        }
+    }
+    
+    if(!cookieVal) {
+        cookieVal = $scope.datasvc.createUser();
+        cookieservice.setCookie('lunch-spinner', cookieVal, 365);
+    }
 
-		firebaseStuff(newFavString);
+    $scope.addYelpFav = function(name){
+        console.log("here");
+        console.log(this.datasvc.favList);
+        $scope.datasvc.addFav(name);
 		
-		$("#newFav").val('');
+		/*$("#newFav").val('');
 		if ($('#noFavList').is(':visible')) {
 			window.location.replace("https://lunch-spinner-cameronsloan.c9.io/index.php?user-key="+cookieVal);
-		}
+		}*/
 	};
 }])
 .filter('numberEx', ['numberFilter', '$locale', function(number, $locale) {
