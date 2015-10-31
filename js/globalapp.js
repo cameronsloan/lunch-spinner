@@ -1,0 +1,1 @@
+var globalapp = angular.module('globalapp', ["firebase"]);

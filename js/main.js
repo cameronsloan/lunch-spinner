@@ -4,6 +4,7 @@
     var cookieVal = '';
 	var lunchOptions = [];
 	var ref = '';
+	var userRef = '';
 	
 // ---------------------------------------------------------------------- //
 //                    COOKIE FUNCTIONS
@@ -44,9 +45,15 @@
 	
 	if(areCookiesEnabled()) {
 		cookiesEnabled = true;
-		cookieVal = readCookie("lunch-spinner");
+		if(readCookie("lunch_spinner")) {
+			cookieVal = readCookie("lunch-spinner");
+		} else if(typeof(userKey) != 'undefined' && userKey != '') {
+			cookieVal = userKey;
+			setCookie(cookieName, cookieVal, 365);
+		}
+		
 		if(cookieVal) {
-			ref = new Firebase("https://torrid-heat-4140.firebaseio.com/"+cookieVal);
+			userRef = new Firebase("https://torrid-heat-4140.firebaseio.com/lunch-spinner-users/"+cookieVal);
 			firebaseCallback();
 		} else {
 			$('#favList').hide();
@@ -74,16 +81,15 @@
 	
 	// Attach an asynchronous callback to read the data at our posts reference
 	function firebaseCallback() {
-		ref.on("value", function(snapshot) {
+		userRef.on("value", function(snapshot) {
 			//clear lunchOptions and the table
 			lunchOptions = [];
 			$("#favTBody").empty();
-			console.log(snapshot.val());
 			//rebuild lunchOptions and the table
-			if(typeof(snapshot.val()) === 'object' && typeof(snapshot.val()[cookieVal]) !== 'undefined') {
-				for(var k in snapshot.val()[cookieVal]) {
-					lunchOptions.push(snapshot.val()[cookieVal][k].name.toUpperCase());
-					$('#favTable > tbody:last-child').append('<tr><td style="width: 300px;">'+snapshot.val()[cookieVal][k].name+'</td><td><input type="checkbox" class="notToday"/></td><td id="'+k+'" class="glyphicon glyphicon-remove deleteFav" style="top: 0px !important; color: red" onClick="deleteFavorite(this.id)"></td></tr>');
+			if(typeof(snapshot.val()) === 'object') {
+				for(var k in snapshot.val()) {
+					lunchOptions.push(snapshot.val()[k].name.toUpperCase());
+					$('#favTable > tbody:last-child').append('<tr><td style="width: 300px;">'+snapshot.val()[k].name+'</td><td><input type="checkbox" class="notToday"/></td><td id="'+k+'" class="glyphicon glyphicon-remove deleteFav" style="top: 0px !important; color: red" onClick="deleteFavorite(this.id)"></td></tr>');
 				}
 			} else {
 				$('#favList').hide();
@@ -95,63 +101,29 @@
 		);
 	}
 	
-	$("#addNewFav").click(function(){
-		var inputVal = $("#newFav").val();
-
+	function firebaseStuff(newFavString) {
 		if(!cookieVal) {
-			var fireUser = makeID(8);
-			cookieVal = fireUser;
-			ref = new Firebase("https://torrid-heat-4140.firebaseio.com/"+cookieVal);
+			ref = new Firebase("https://torrid-heat-4140.firebaseio.com/lunch-spinner-users");
+			var newUser = ref.push();
+			cookieVal = newUser.path.w[1];
+			userRef = new Firebase("https://torrid-heat-4140.firebaseio.com/lunch-spinner-users/"+cookieVal);
 			firebaseCallback();
-			var favRef = ref.child(fireUser);
 		} else {
-			var favRef = ref.child(cookieVal);
+			userRef = new Firebase("https://torrid-heat-4140.firebaseio.com/lunch-spinner-users/"+cookieVal);
 		}
 		
-		var pushResult = favRef.push({
-			name: inputVal
+		userRef.push({
+			name: newFavString
 		});
 
 		// If cookies are enabled - check / set
 		if(cookiesEnabled) {
 			setCookie(cookieName, cookieVal, 365);
 		}
-		
-		$("#newFav").val('');
-		if ($('#noFavList').is(':visible')) {
-			window.location.replace("https://lunch-spinner-cameronsloan.c9.io/index.php?user_ref="+cookieVal);
-		}
-	});
-	
-	$(".addNewFavYelp").click(function(){
-		var newFavYelp = $(this).next().text();
-		
-		if(!cookieVal) {
-			var fireUser = makeID(8);
-			cookieVal = fireUser;
-			ref = new Firebase("https://torrid-heat-4140.firebaseio.com/"+cookieVal);
-			firebaseCallback();
-			var favRef = ref.child(fireUser);
-		} else {
-			var favRef = ref.child(cookieVal);
-		}
-		
-		var pushResult = favRef.push({
-			name: newFavYelp
-		});
-		
-		// If cookies are enabled - check / set
-		if(cookiesEnabled) {
-			setCookie(cookieName, cookieVal, 365);
-		}
-		
-		if ($('#noFavList').is(':visible')) {
-			window.location.replace("https://lunch-spinner-cameronsloan.c9.io/index.php?user_ref="+cookieVal);
-		}
-	});
+	}
 	
 	function deleteFavorite(fireid) {
-		var favRef = new Firebase("https://torrid-heat-4140.firebaseio.com/"+cookieVal+"/"+fireid);
+		var favRef = new Firebase("https://torrid-heat-4140.firebaseio.com/lunch-spinner-users/"+cookieVal+"/"+fireid);
 		
 		var onComplete = function(error) {
 			if (error) {
