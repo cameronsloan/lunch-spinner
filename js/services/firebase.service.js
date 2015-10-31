@@ -19,14 +19,25 @@ globalapp.service('firebase', ["$scope", function($scope){
 		});
     }
     
-    this.addMessage = function(e) {
+    this.addFavManual = function(e) {
         //LISTEN FOR RETURN KEY
         if (e.keyCode === 13 && $scope.msg) {
-            //ALLOW CUSTOM OR ANONYMOUS USER NAMES
-            var name = $scope.name || "anonymous";
-            $scope.messages.$add({ from: name, body: $scope.msg });
-            //RESET MESSAGE
-            $scope.msg = "";
+            // Get favorite from input
+            var fav = $scope.favInput;
+            $scope.favList.$add({ name: fav });
+            // Reset input
+            $scope.favInput = "";
+        }
+    }
+    
+    this.addFavYelp = function(e) {
+        //LISTEN FOR RETURN KEY
+        if (e.keyCode === 13 && $scope.msg) {
+            // Get favorite from input
+            var fav = $scope.favInput;
+            $scope.favList.$add({ name: fav });
+            // Reset input
+            $scope.favInput = "";
         }
     }
     

@@ -196,10 +196,10 @@
 								</tr>
 							</thead>
 						</table>
-						<div class="fav-body">
+						<div class="fav-body" ng-controller="favctrl">
 							<table class="table table-striped" id="favTable">
 								<tbody id="favTBody">
-			
+									<tr ng-repeat="f in "
 								</tbody>
 							</table>
 						</div>

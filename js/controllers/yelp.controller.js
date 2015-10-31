@@ -1,4 +1,5 @@
-globalapp.controller('yelpctrl', function($scope, firebase) {
+globalapp.controller('yelpctrl', ["$scopt", "$firebaseArray",
+function($scope, $firebaseArray) {
     $scope.lunchOptionsYelp = lunchOptionsYelp;
     $scope.yelpResponse = yelpResponse;
     
@@ -12,7 +13,7 @@ globalapp.controller('yelpctrl', function($scope, firebase) {
 			window.location.replace("https://lunch-spinner-cameronsloan.c9.io/index.php?user-key="+cookieVal);
 		}
 	};
-})
+}])
 .filter('numberEx', ['numberFilter', '$locale', function(number, $locale) {
     var formats = $locale.NUMBER_FORMATS;
     return function(input, fractionSize) {
