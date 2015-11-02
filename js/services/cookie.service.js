@@ -30,14 +30,9 @@ globalapp.service('cookieservice', ['$cookies', function($cookies){
 	}
 	
 	this.getCookie = function(keyname) {
-		console.log("getting cookie");
-		console.log($cookies.get(keyname));
 		var cookie = $cookies.get(keyname);
 		if(typeof(cookie) == 'string') {
-			console.log("stripping quotes");
-			console.log(cookie.length)
 			var cookieVal = cookie.substring(1, cookie.length - 1);
-			console.log(cookieVal);
 			return cookieVal;
 		}
 		return false;
