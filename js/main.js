@@ -4,8 +4,8 @@ var favscope = '';
 setTimeout(function(){ 
 	favscope = getScope('favctrl');
 	
-	if(typeof(favscope.favList) != 'undefined') {
-		jQuery.each(favscope.favList.favList[0] , function(index, value){
+	if(typeof(favscope.datasvc.favList) != 'undefined') {
+		jQuery.each(favscope.datasvc.favList , function(index, value){
 			if(value && value.name) {
 				lunchOptions.push(value.name.toUpperCase());
 			}
@@ -44,7 +44,7 @@ $('.fancy .slot').jSlots({
 		});
 		
 		var lunchString = useableLunchOptions[Math.floor(Math.random()*useableLunchOptions.length)];
-		//console.log(lunchString);
+		
 		var winner = [];
 		var padding = Math.ceil((32 - lunchString.length) / 2);
 
@@ -69,12 +69,10 @@ $('.fancy .slot').jSlots({
 		for(var i = 0; i <= 32 - tmp; i++) {
 			winner.push(1);
 		}
-		//console.log(winner);
 		return winner;
 	},
 	endNumFuncYelp: function() {					
 		var lunchString = lunchOptionsYelp[Math.floor(Math.random()*lunchOptionsYelp.length)];
-		//console.log(lunchString);
 		var winner = [];
 		var padding = Math.ceil((32 - lunchString.length) / 2);
 		
@@ -99,7 +97,6 @@ $('.fancy .slot').jSlots({
 		for(var i = 0; i <= 32 - tmp; i++) {
 			winner.push(1);
 		}
-		//console.log(winner);
 		return winner;
 	}
 	

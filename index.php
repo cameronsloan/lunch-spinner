@@ -174,13 +174,20 @@
 							<li><span>&amp;</span></li>
 						</ul>
 					</div>
-					<div style="margin: 40px auto; width: 400px;">
-						<input type="button" class="btn btn-primary btn-lg btn-block" id="playFancy" value="Spin My Favorites">
-					</div>
 				</div>
-				<div style="margin: 20px auto; width: 400px; text-align: center;">
-				    <input type="button" class="btn btn-warning btn-lg btn-block" id="playSuprise" value="Find Me Something New"/>
-				    <p class="button-details">Clicking this button will spin the Yelp results from below</p>
+				<div class="row" style="margin-top: 30px;">
+					<div class="col-md-4">
+						<img src="http://lorempixel.com/200/200/sports/1/Dummy-Text"/>
+					</div>
+					<div class="col-md-4" style="margin-top: 30px">
+							<input type="button" class="btn btn-primary btn-lg btn-block" id="playFancy" value="Spin My Favorites">
+							<br />
+					    	<input type="button" class="btn btn-warning btn-lg btn-block" id="playSuprise" value="Find Me Something New"/>
+					    	<p class="button-details">Clicking this button will spin the Yelp results from below</p>
+				    </div>
+				    <div class="col-md-4 text-right">
+				    	<img src="http://lorempixel.com/200/200/sports/1/Dummy-Text"/>
+				    </div>
 				</div>
 			</div>
 	    </div>
