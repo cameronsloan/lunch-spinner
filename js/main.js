@@ -1,23 +1,3 @@
-var lunchOptions = [];
-
-var favscope = '';
-setTimeout(function(){ 
-	favscope = getScope('favctrl');
-	
-	if(typeof(favscope.datasvc.favList) != 'undefined') {
-		jQuery.each(favscope.datasvc.favList , function(index, value){
-			if(value && value.name) {
-				lunchOptions.push(value.name.toUpperCase());
-			}
-		});
-	}
-}, 3000);
-
-function getScope(ctrlName) {
-    var sel = 'div[ng-controller="' + ctrlName + '"]';
-    return angular.element(sel).scope();
-}
-
 // Spin from user's favorites
 $('.fancy .slot').jSlots({
 	number : 32,
@@ -36,7 +16,22 @@ $('.fancy .slot').jSlots({
 			}
 		});
 		
-		useableLunchOptions = [];
+		function getScope(ctrlName) {
+		    var sel = 'div[ng-controller="' + ctrlName + '"]';
+		    return angular.element(sel).scope();
+		}
+		
+		var useableLunchOptions = [];
+		var lunchOptions = [];
+		var favscope = getScope('favctrl');
+		if(typeof(favscope.datasvc.favList) != 'undefined') {
+			jQuery.each(favscope.datasvc.favList , function(index, value){
+				if(value && value.name) {
+					lunchOptions.push(value.name.toUpperCase());
+				}
+			});
+		}
+		
 		jQuery.each(lunchOptions, function(index, value){
 			if($.inArray(value, notToday) == -1) {
 				useableLunchOptions.push(value);

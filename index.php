@@ -140,7 +140,7 @@
 	    <!-- Main jumbotron for a primary marketing message or call to action -->
 	    <div class="jumbotron">
 			<div class="container">
-				<div class="row text-center">
+				<div class="row">
 					<div class="fancy">
 						<ul class="slot">
 							<li><span>&nbsp;</span></li>
@@ -179,7 +179,7 @@
 					<div class="col-md-4">
 						<img src="http://lorempixel.com/200/200/sports/1/Dummy-Text"/>
 					</div>
-					<div class="col-md-4" style="margin-top: 30px">
+					<div class="col-md-4 text-center" style="margin-top: 30px">
 							<input type="button" class="btn btn-primary btn-lg btn-block" id="playFancy" value="Spin My Favorites">
 							<br />
 					    	<input type="button" class="btn btn-warning btn-lg btn-block" id="playSuprise" value="Find Me Something New"/>

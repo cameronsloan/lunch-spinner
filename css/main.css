@@ -42,7 +42,8 @@ input[type="button"] {
     width: 1120px;
     height: 62px;
     border-radius: 10px;
-    background-image: url("../img/slotbg.png")
+    background-image: url("../img/slotbg.png");
+    margin: 0 auto;
 }
 .fancy .jSlots-wrapper {
     overflow: hidden;
@@ -50,6 +51,7 @@ input[type="button"] {
     border: none;
     display: inline-block; /* to size correctly, can use float too, or width*/
 }
+
 
 .fancy .slot li {
     width: 35px;
