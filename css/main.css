@@ -90,6 +90,19 @@ input[type="button"] {
     padding-top: 4px;
 }
 
+#favList, #noFavList, .yelpFavList {
+    border: 1px solid #EEEEEE;
+}
+
+.table-header {
+    width: 100%;
+    font: bold 18px Sans-Serif;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+    text-align: center;
+    line-height: 32px;
+    background-color: #EEEEEE;
+}
+
 .favHeader {
     margin-bottom: 0;
 }
@@ -106,6 +119,12 @@ input[type="button"] {
 
 .deleteFav:hover, .addNewFavYelp:hover {
     cursor: pointer;
+}
+
+#yelpAddressBtn {
+    float: right;
+    font-size: 14px;
+    margin-right: 10px;
 }
 
 .addNewFavYelp {

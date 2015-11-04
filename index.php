@@ -197,10 +197,13 @@
 			<div class="row">
 				<div class="col-md-4" ng-controller="favctrl">
 					<div id="favList">
+						<div class="table-header">
+							Configured Favorites
+						</div>
 						<table class="table favHeader">
 							<thead>
 								<tr>
-									<th>Configured Favorites</th>
+									<th style="width: 70%;">Restaurant Name</th>
 									<th>Not Today</th>
 								</tr>
 							</thead>
@@ -235,74 +238,81 @@
 				</div>
 				
 				<div class="col-md-7">
-					<table class="table favHeader">
-						<thead>
-							<tr>
-								<th>
-									<div style="float: left;" title="Search Yelp listings to find new favorites. Click the green + to add them to your favorite list. After your search, Click the 'Find Me Something New' button above to let Lunch Spinner choose for you!">Find New Favorites</div>
-	
-									<div id="yelpAddressBtn" style="float: right;"><a href="#">Enter Address <span class="glyphicon glyphicon-chevron-down"></a></span></div>
-								</th>
-							</tr>
-							<tr>
-								<th id="yelpAddress" style="display: none;">
-									<form action="index.php" method="post">
-									    <div class="suprise">
-									        <div class="col-md-3 less-padding">
-					                            <input type="text" class="form-control" id="address" name="address" value="<?if(isset($_POST['address'])) { echo htmlspecialchars($_POST['address']); } else { echo ''; }?>" placeholder="Address">
-					                        </div>
-					                        <div class="col-md-3 less-padding">
-					                            <input type="text" class="form-control" id="city" name="city" value="<?if(isset($_POST['city'])) { echo htmlspecialchars($_POST['city']); } else { echo ''; }?>" placeholder="City">
-					                        </div>
-					                        <div class="col-md-2 less-padding">
-					                            <select class="form-control" id="state" name="state" value="<?if(isset($_POST['state'])) { echo htmlspecialchars($_POST['state']); } else { echo ''; }?>" placeholder="State">
-													<?php foreach($states as $key => $value) { ?>
-														<option value="<?=$value?> <?if($state == $value) {echo "selected";}?>"><?php echo $value ?></option>
-													<?php }?>
-												</select>
-					                            </select>
-					                        </div>
-					                        <div class="col-md-2 less-padding">
-					                            <input type="text" class="form-control" id="zip" name="zip" value="<?if(isset($_POST['zip'])) { echo htmlspecialchars($_POST['zip']); } else { echo ''; }?>" placeholder="Zip">
-					                        </div>
-					                        <div class="col-md-2 less-padding">
-					                        	<button type="submit" id="yelpSearch" class="btn btn-primary" value="Search">Search</button>
-					                        </div>
-					                    </div>
-									</form>
-								</th>
-							</tr>
-						</thead>
-					</table>
-					<div class="fav-body-yelp" ng-controller="yelpctrl">
-						<table class="table table-striped">
-							<tbody id="favTBody">
-								<tr ng-if="yelpResponse" ng-repeat="b in yelpResponse.businesses">
-									<td ng-click="addYelpFav(b.name)">
-										<span class="glyphicon glyphicon-plus" style="color: green;"></span>
-									</td>
-									<td ng-if="b.img_url">
-										<a class="fancybox" rel="gallery" href="{{ b.img_url }}"><span class="glyphicon glyphicon-picture"></span></a>&nbsp;<a href="{{ b.url }}" target="_blank">{{ b.name }}</a>
-									</td>
-									<td ng-if="!b.img_url">
-										<a href="{{ b.url }}" target="_blank">{{ b.name }}</a>
-									</td>
-									<td>
-										<img src="{{ b.rating_img_url_small }}"/>
-									</td>
-									<td>
-										{{ b.location.address[0] }}
-									</td>
-									<td ng-if="b.distance">
-										{{ (b.distance * 0.000621371) | numberEx:2 }} mi
-									</td>
-									<td ng-if="!b.distance"></td>
+					<div class="yelpFavList">
+						<div class="table-header">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find New Favorites
+							<div id="yelpAddressBtn">
+								<a href="#">Enter Address <span class="glyphicon glyphicon-chevron-down"></a></span>
+							</div>
+						</div>
+						<table class="table favHeader">
+							<thead>
+								<tr>
+									<th colspan="4" id="yelpAddress" style="display: none;">
+										<form action="index.php" method="post">
+										    <div class="suprise">
+										        <div class="col-md-3 less-padding">
+						                            <input type="text" class="form-control" id="address" name="address" value="<?if(isset($_POST['address'])) { echo htmlspecialchars($_POST['address']); } else { echo ''; }?>" placeholder="Address">
+						                        </div>
+						                        <div class="col-md-3 less-padding">
+						                            <input type="text" class="form-control" id="city" name="city" value="<?if(isset($_POST['city'])) { echo htmlspecialchars($_POST['city']); } else { echo ''; }?>" placeholder="City">
+						                        </div>
+						                        <div class="col-md-2 less-padding">
+						                            <select class="form-control" id="state" name="state" value="<?if(isset($_POST['state'])) { echo htmlspecialchars($_POST['state']); } else { echo ''; }?>" placeholder="State">
+														<?php foreach($states as $key => $value) { ?>
+															<option value="<?=$value?> <?if($state == $value) {echo "selected";}?>"><?php echo $value ?></option>
+														<?php }?>
+													</select>
+						                            </select>
+						                        </div>
+						                        <div class="col-md-2 less-padding">
+						                            <input type="text" class="form-control" id="zip" name="zip" value="<?if(isset($_POST['zip'])) { echo htmlspecialchars($_POST['zip']); } else { echo ''; }?>" placeholder="Zip">
+						                        </div>
+						                        <div class="col-md-2 less-padding">
+						                        	<button type="submit" id="yelpSearch" class="btn btn-primary" value="Search">Search</button>
+						                        </div>
+						                    </div>
+										</form>
+									</th>
 								</tr>
-								<tr ng-if="!yelpResponse">
-									<td colspan="5">Unable to determine search location</td>
+								<tr>
+									<th style="width: 50px; text-align: left;">Add</th>
+									<th>Restaurant Name</th>
+									<th>Yelp Rating</th>
+									<th>Address</th>
 								</tr>
-							</tbody>
+							</thead>
 						</table>
+						<div class="fav-body-yelp" ng-controller="yelpctrl">
+							<table class="table table-striped">
+								<tbody id="favTBody">
+									<tr ng-if="yelpResponse" ng-repeat="b in yelpResponse.businesses">
+										<td ng-click="addYelpFav(b.name)">
+											<span class="glyphicon glyphicon-plus" style="color: green;"></span>
+										</td>
+										<td ng-if="b.img_url">
+											<a class="fancybox" rel="gallery" href="{{ b.img_url }}"><span class="glyphicon glyphicon-picture"></span></a>&nbsp;<a href="{{ b.url }}" target="_blank">{{ b.name }}</a>
+										</td>
+										<td ng-if="!b.img_url">
+											<a href="{{ b.url }}" target="_blank">{{ b.name }}</a>
+										</td>
+										<td>
+											<img src="{{ b.rating_img_url_small }}"/>
+										</td>
+										<td>
+											{{ b.location.address[0] }}
+										</td>
+										<td ng-if="b.distance">
+											{{ (b.distance * 0.000621371) | numberEx:2 }} mi
+										</td>
+										<td ng-if="!b.distance"></td>
+									</tr>
+									<tr ng-if="!yelpResponse">
+										<td colspan="5">Unable to determine search location</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 				<div style="float: right; padding: 10px 20px 0 0;">
